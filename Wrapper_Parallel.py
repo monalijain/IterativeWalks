@@ -119,10 +119,10 @@ if __name__ == "__main__":
     Walk= 1
     #for i in range(0,len(TBeginList)):
     for i in range(0,2): #For now, running 2 walkforwards
-		logging.info("Starting : %s ",str(Walk))
-        processWalkforward(Walk)
-        logging.info("Exiting : %s ", str(Walk))
-        Walk += 1
+	logging.info("Starting : %s ",str(Walk))
+	processWalkforward(Walk)
+	logging.info("Exiting : %s ", str(Walk))
+	Walk += 1
     
     logging.info('Finished at : %s',str(datetime.now()))
 
