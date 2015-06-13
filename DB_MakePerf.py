@@ -15,7 +15,7 @@ class Make_Perf():
         #countDates=dbObject2.dbQuery("SELECT COUNT(DISTINCT(date)),1 FROM price_series_table WHERE date >= '" + str(BeginDate.date())+ "' AND date <= '"+str(EndDate.date())+"'")
         resultDates = dbObject1.dbQuery("SELECT DISTINCT(date),1 FROM "+ gv.priceSeriesTable +" WHERE date >= '" + str(BeginDate.date())+ "' AND date <= '"+str(EndDate.date())+"'")
         #dbObject2.dbClose()
-    
+
         DictOfDates={}
         date_count_range=0
         for date,count in resultDates:
