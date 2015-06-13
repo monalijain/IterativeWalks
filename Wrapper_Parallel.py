@@ -7,25 +7,29 @@ import csv
 from DB_DBUtils import *
 import logging
 
-from WFList import CreateWFList
+from WFList import *
 from NonSortedGANewVersion import *
 import GlobalVariables as gv
-from DB_MakePerf import Make_Performance_Measures
+from DB_MakePerf import *
 
-def processWalkforward(walkforward_number):
-    walkNo=walkforward_number-1
-    dbObject = DBUtils()
-    dbObject.dbConnect()
-    logging.info("Making MYFILE CSV and NetPL Ratio csv for walkforward %s", walkNo+1)
+class processWF:
+    def processWalkforward(self, walkforward_number):
+        walkNo=walkforward_number-1
+        dbObject = DBUtils()
+        dbObject.dbConnect()
     
-    stringMyFile="MYFILE"+str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)+".csv"
-    stringNetPLRatio="NetPLRatio"+str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)+".csv"
-    c=csv.writer(open(stringMyFile,"wb"))
-    PLRatio=csv.writer(open(stringNetPLRatio,"wb"))
+        MakePerfObject=Make_Perf()
+        GAObject=GA()
+        logging.info("Making MYFILE CSV and NetPL Ratio csv for walkforward %s", walkNo+1)
+    
+        stringMyFile="MYFILE"+str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)+".csv"
+        stringNetPLRatio="NetPLRatio"+str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)+".csv"
+        c=csv.writer(open(stringMyFile,"wb"))
+        PLRatio=csv.writer(open(stringNetPLRatio,"wb"))
 
-    string_1= "CREATE TABLE performance_measures_"+"Training"+"_walk" + str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)
-    logging.info("Executing Query %s",string_1)
-    dbObject.dbQuery(" " + string_1 + " "
+        string_1= "CREATE TABLE performance_measures_"+"Training"+"_walk" + str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)
+        logging.info("Executing Query %s",string_1)
+        dbObject.dbQuery(" " + string_1 + " "
                              "("
                              "individual_id int,"
                              "netpl_trades float,"
@@ -37,9 +41,9 @@ def processWalkforward(walkforward_number):
                              "profit_epochs float"
                              ")")
 
-    string_1= "CREATE TABLE performance_measures_"+"Reporting"+"_walk" + str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)
-    logging.info("Executing Query %s",string_1)
-    dbObject.dbQuery(" " + string_1 + " "
+        string_1= "CREATE TABLE performance_measures_"+"Reporting"+"_walk" + str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)
+    	logging.info("Executing Query %s",string_1)
+    	dbObject.dbQuery(" " + string_1 + " "
                              "("
                              "individual_id int,"
                              "netpl_trades float,"
@@ -51,28 +55,28 @@ def processWalkforward(walkforward_number):
                              "profit_epochs float"
                              ")")
         
-    logging.info("Calculating Performance Measures of Training Period for walkforward %s",walkforward_number)
-    Make_Performance_Measures(TBeginList[walkNo],TendList[walkNo],Train_Or_Report="Training",walkforward_number=walkforward_number)
-    Make_Performance_Measures(RBeginList[walkNo],REndList[walkNo],Train_Or_Report="Reporting",walkforward_number=walkforward_number)
+        logging.info("Calculating Performance Measures of Training Period for walkforward %s",walkforward_number)
+        MakePerfObject.Make_Performance_Measures(TBeginList[walkNo],TendList[walkNo],Train_Or_Report="Training",walkforward_number=walkforward_number)
+        MakePerfObject.Make_Performance_Measures(RBeginList[walkNo],REndList[walkNo],Train_Or_Report="Reporting",walkforward_number=walkforward_number)
 
-    c.writerow(["Walkforward",walkforward_number,TBeginList[walkNo],TendList[walkNo],RBeginList[walkNo],REndList[walkNo]])
+        c.writerow(["Walkforward",walkforward_number,TBeginList[walkNo],TendList[walkNo],RBeginList[walkNo],REndList[walkNo]])
 
-    logging.info("Calling NonSorted Genetic Algorithm for walkforward %s",walkNo+1)
-    [A,C,StoreParetoID]=NonSortedGA(walkforward_number,gv.MaxIndividualsInGen,MaxGen,MaxIndividuals)
-    #[A,B,C]=NonSortedGA("Tradesheets","PriceSeries",6,'20120622','20121109','20121112','20130111',0.0,2,12)
-    c.writerow(["IndividualID","TrainingPeriod"])
-    c.writerow(["","NetPL/Trades ratio","NetPL/Drawdown ratio","total_Gain", "total_DD", "NetPL", "TotalTrades", "ProfitMakingEpochs",""])
-    #PLRatio.writerow(["Walkforward",walkNo+1,TBeginList[walkNo],TendList[walkNo],RBeginList[walkNo],REndList[walkNo]])
+        logging.info("Calling NonSorted Genetic Algorithm for walkforward %s",walkNo+1)
+        [A,C,StoreParetoID]=GAObject.NonSortedGA(walkforward_number,gv.MaxIndividualsInGen,MaxGen,MaxIndividuals)
+        #[A,B,C]=NonSortedGA("Tradesheets","PriceSeries",6,'20120622','20121109','20121112','20130111',0.0,2,12)
+        c.writerow(["IndividualID","TrainingPeriod"])
+        c.writerow(["","NetPL/Trades ratio","NetPL/Drawdown ratio","total_Gain", "total_DD", "NetPL", "TotalTrades", "ProfitMakingEpochs",""])
+        #PLRatio.writerow(["Walkforward",walkNo+1,TBeginList[walkNo],TendList[walkNo],RBeginList[walkNo],REndList[walkNo]])
 
-    for key in A.keys():
-        c.writerow([key,A[key][0],A[key][1],A[key][2],A[key][3],A[key][4],A[key][5],A[key][6]])
+        for key in A.keys():
+            c.writerow([key,A[key][0],A[key][1],A[key][2],A[key][3],A[key][4],A[key][5],A[key][6]])
 
-    c.writerow([])
+        c.writerow([])
         
-    for key in C.keys():
-        PLRatio.writerow([key,C[key][0],C[key][1]])
+        for key in C.keys():
+            PLRatio.writerow([key,C[key][0],C[key][1]])
 
-    PLRatio.writerow([])
+        PLRatio.writerow([])
 
 #    Calculate_Performance_Measures_Generation(TBeginList[walkNo],TendList[walkNo],Train_Or_Report="Training",walkforward_number=walkforward_number,StoreParetoID=StoreParetoID)
 #    Calculate_Performance_Measures_Generation(RBeginList[walkNo],REndList[walkNo],Train_Or_Report="Reporting",walkforward_number=walkforward_number,StoreParetoID=StoreParetoID)
@@ -112,15 +116,16 @@ if __name__ == "__main__":
     dbObject1.dbClose()
     
     logging.info("Creates Walkforward List %s",str(datetime.now()))
-
-    [TBeginList,TendList,RBeginList,REndList]=CreateWFList(gv.priceSeriesTable, gv.numDaysInTraining, gv.numDaysInReporting) #Creates Walkforward List
+    WFObject=WF()
+    [TBeginList,TendList,RBeginList,REndList]=WFObject.CreateWFList(gv.priceSeriesTable, gv.numDaysInTraining, gv.numDaysInReporting) #Creates Walkforward List
     #[TBeginList,TendList,RBeginList,REndList]=[["20120622","20120625"],["20120623","20120626"],["20120625","20120627"],["20130626","20120629"]]
 
     Walk= 1
+    processWFObject=processWF()
     #for i in range(0,len(TBeginList)):
     for i in range(0,2): #For now, running 2 walkforwards
 	logging.info("Starting : %s ",str(Walk))
-	processWalkforward(Walk)
+	processWFObject.processWalkforward(Walk)
 	logging.info("Exiting : %s ", str(Walk))
 	Walk += 1
     
