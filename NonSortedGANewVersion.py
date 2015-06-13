@@ -79,7 +79,7 @@ class GA:
             Pt=Pt1
     
         StoreParetoID_EachGen=[]
-        F=FastNonDominatedSort(Pt)
+        F=FastSortObject.FastNonDominatedSort(Pt)
     
         NetPL_CurrentGen=0.0
         TotalTrades_CurrentGen=0
