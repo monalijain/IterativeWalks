@@ -5,7 +5,7 @@ import csv
 from DB_DBUtils import *
 
 class PerfMeasures:
-    def CalculatePerformanceMeasures(IndividualID,walkforward_number,stock_number):
+    def CalculatePerformanceMeasures(self,IndividualID,walkforward_number,stock_number):
         dbObject2=DBUtils()
         dbObject2.dbConnect()
         stringName= "performance_measures_"+"Training"+"_walk" + str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)
@@ -25,7 +25,7 @@ class PerfMeasures:
         dbObject2.dbClose()
         return Performance_Measures
         
-    def CalculatePerformanceMeasuresReporting(IndividualID,walkforward_number,stock_number):
+    def CalculatePerformanceMeasuresReporting(self, IndividualID,walkforward_number,stock_number):
         dbObject3=DBUtils()
         dbObject3.dbConnect()
         stringName= "performance_measures_"+"Reporting"+"_walk" + str(walkforward_number)+ "_" + "stock"+ str(gv.stock_number)
