@@ -6,7 +6,7 @@ import logging
 import datetime
 
 class WF:
-    def CreateWFList(SamplePriceSeries,T,R):
+    def CreateWFList(self, SamplePriceSeries,T,R):
         dbObject4 = DBUtils()
         dbObject4.dbConnect()
         query= "SELECT *, 1 FROM " + gv.priceSeriesTable
