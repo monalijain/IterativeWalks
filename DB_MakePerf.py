@@ -3,7 +3,7 @@ import csv
 import GlobalVariables as gv
 from DB_DBUtils import *
 import logging
-class Make_Perf():
+class Make_Perf:
     def Make_Performance_Measures(self, Begin,End,Train_Or_Report,walkforward_number):
         dbObject1 = DBUtils()
         dbObject1.dbConnect()
