@@ -3,7 +3,7 @@ __author__ = 'MJ'
 import operator
 
 class Sort():
-    def FastNonDominatedSort(Rt):
+    def FastNonDominatedSort(self, Rt):
         F={}
         FrontOfPopulation={}
         PopulationStore=Rt.items()
