@@ -1,7 +1,7 @@
 __author__ = 'MJ'
 
 import random
-class MakePop():
+class MakePop:
     def MakeNewPopulation(self, F,Pt1,i,gen,MaxIndividualsInGen,lengthOfFront1And2):
         SumFitnessValues=0
         j=1
