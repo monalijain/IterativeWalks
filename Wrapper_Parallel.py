@@ -115,7 +115,7 @@ if __name__ == "__main__":
     '''
     dbObject1.dbClose()
     
-    logging.info("Creates Walkforward List %s",str(datetime.now()))
+    logging.info("Creates Walkforward List %s",str(datetime.time))
     WFObject=WF()
     [TBeginList,TendList,RBeginList,REndList]=WFObject.CreateWFList(gv.priceSeriesTable, gv.numDaysInTraining, gv.numDaysInReporting) #Creates Walkforward List
     #[TBeginList,TendList,RBeginList,REndList]=[["20120622","20120625"],["20120623","20120626"],["20120625","20120627"],["20130626","20120629"]]
@@ -129,5 +129,5 @@ if __name__ == "__main__":
 	logging.info("Exiting : %s ", str(Walk))
 	Walk += 1
     
-    logging.info('Finished at : %s',str(datetime.now()))
+    logging.info('Finished at : %s',str(datetime.time))
 
